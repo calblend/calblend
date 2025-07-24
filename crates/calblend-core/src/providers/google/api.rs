@@ -16,7 +16,7 @@ use super::models::{GoogleCalendar, GoogleEvent, GoogleFreeBusyRequest, GoogleFr
 /// Google Calendar API client
 pub struct GoogleCalendarApi {
     auth: Arc<GoogleAuth>,
-    http_client: HttpClient,
+    pub(crate) http: HttpClient,
     rate_limiter: RateLimiter,
 }
 
@@ -32,7 +32,7 @@ impl GoogleCalendarApi {
     pub fn new(auth: Arc<GoogleAuth>, http_client: HttpClient) -> Self {
         Self {
             auth,
-            http_client,
+            http: http_client,
             rate_limiter: RateLimiter::new(
                 Self::RATE_LIMIT_MAX_REQUESTS,
                 Self::RATE_LIMIT_WINDOW_SECS,
@@ -46,7 +46,7 @@ impl GoogleCalendarApi {
         self.rate_limiter.check_rate_limit().await;
         
         let access_token = self.auth.get_access_token().await?;
-        let response = self.http_client.client()
+        let response = self.http.client()
             .get(url)
             .bearer_auth(&access_token)
             .send()
@@ -75,7 +75,7 @@ impl GoogleCalendarApi {
         self.rate_limiter.check_rate_limit().await;
         
         let access_token = self.auth.get_access_token().await?;
-        let response = self.http_client.client()
+        let response = self.http.client()
             .post(url)
             .bearer_auth(&access_token)
             .json(body)
@@ -105,7 +105,7 @@ impl GoogleCalendarApi {
         self.rate_limiter.check_rate_limit().await;
         
         let access_token = self.auth.get_access_token().await?;
-        let response = self.http_client.client()
+        let response = self.http.client()
             .put(url)
             .bearer_auth(&access_token)
             .json(body)
@@ -131,7 +131,7 @@ impl GoogleCalendarApi {
         self.rate_limiter.check_rate_limit().await;
         
         let access_token = self.auth.get_access_token().await?;
-        let response = self.http_client.client()
+        let response = self.http.client()
             .delete(url)
             .bearer_auth(&access_token)
             .send()

@@ -97,22 +97,20 @@ impl RateLimiter {
 /// Convert Google API errors to CalblendError
 pub fn map_google_error(status: reqwest::StatusCode, body: &str) -> CalblendError {
     match status {
-        reqwest::StatusCode::UNAUTHORIZED => CalblendError::AuthenticationError("Invalid or expired token".to_string()),
+        reqwest::StatusCode::UNAUTHORIZED => CalblendError::Authentication("Invalid or expired token".to_string()),
         reqwest::StatusCode::FORBIDDEN => CalblendError::PermissionDenied("Insufficient permissions".to_string()),
         reqwest::StatusCode::NOT_FOUND => CalblendError::EventNotFound("Resource not found".to_string()),
         reqwest::StatusCode::TOO_MANY_REQUESTS => CalblendError::RateLimitExceeded,
         _ => {
             // Try to parse error from response body
             if let Ok(error_response) = serde_json::from_str::<GoogleErrorResponse>(body) {
-                CalblendError::ProviderError {
-                    provider: "Google".to_string(),
-                    message: error_response.error.message,
-                }
+                CalblendError::Provider(
+                    format!("Google: {}", error_response.error.message)
+                )
             } else {
-                CalblendError::ProviderError {
-                    provider: "Google".to_string(),
-                    message: format!("HTTP {}: {}", status.as_u16(), body),
-                }
+                CalblendError::Provider(
+                    format!("Google: HTTP {} - {}", status.as_u16(), body)
+                )
             }
         }
     }

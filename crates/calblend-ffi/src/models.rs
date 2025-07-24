@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 // Re-export the enums and types from core with N-API attributes
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum CalendarSource {
     Google,
     Outlook,
@@ -17,7 +17,7 @@ pub enum CalendarSource {
 }
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ParticipantStatus {
     Accepted,
     Tentative,
@@ -26,7 +26,7 @@ pub enum ParticipantStatus {
 }
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ReminderMethod {
     Popup,
     Email,
@@ -34,7 +34,7 @@ pub enum ReminderMethod {
 }
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum EventStatus {
     Confirmed,
     Tentative,
@@ -42,7 +42,7 @@ pub enum EventStatus {
 }
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum EventVisibility {
     Default,
     Public,
@@ -51,7 +51,7 @@ pub enum EventVisibility {
 }
 
 #[napi]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ShowAs {
     Busy,
     Free,
@@ -61,7 +61,7 @@ pub enum ShowAs {
 }
 
 #[napi(object)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Participant {
     pub id: Option<String>,
     pub email: Option<String>,
@@ -75,21 +75,21 @@ pub struct Participant {
 }
 
 #[napi(object)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Reminder {
     pub minutes_before: i32,
     pub method: Option<ReminderMethod>,
 }
 
 #[napi(object)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ConferenceLink {
     pub url: Option<String>,
     pub provider: Option<String>,
 }
 
 #[napi(object)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct EventMoment {
     pub date_time: String, // RFC3339 string for JS compatibility
     pub time_zone: Option<String>,
@@ -97,7 +97,7 @@ pub struct EventMoment {
 }
 
 #[napi(object)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UnifiedCalendarEvent {
     // Identity
     pub id: String,
@@ -130,9 +130,21 @@ pub struct UnifiedCalendarEvent {
     pub conference: Option<ConferenceLink>,
 
     // Provider metadata
-    pub raw: Option<serde_json::Value>,
+    pub raw: Option<String>, // JSON string for JS compatibility
     pub created: Option<String>, // RFC3339 string
     pub updated: Option<String>, // RFC3339 string
+}
+
+#[napi(object)]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Calendar {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+    pub color: Option<String>,
+    pub is_primary: bool,
+    pub can_write: bool,
+    pub source: CalendarSource,
 }
 
 // Conversion helpers between core types and FFI types

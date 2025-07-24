@@ -88,7 +88,7 @@ impl GoogleAuth {
         let pkce_verifier = {
             let mut verifier = self.pkce_verifier.write().await;
             verifier.take().ok_or_else(|| {
-                CalblendError::AuthenticationError("No PKCE verifier found".to_string())
+                CalblendError::Authentication("No PKCE verifier found".to_string())
             })?
         };
 
@@ -98,7 +98,7 @@ impl GoogleAuth {
             .set_pkce_verifier(pkce_verifier)
             .request_async(async_http_client)
             .await
-            .map_err(|e| CalblendError::AuthenticationError(e.to_string()))?;
+            .map_err(|e| CalblendError::Authentication(e.to_string()))?;
 
         // Convert to our TokenData format
         let token_data = TokenData {
@@ -133,7 +133,7 @@ impl GoogleAuth {
             .token_storage
             .get_token(CalendarSource::Google)
             .await?
-            .ok_or_else(|| CalblendError::AuthenticationError("No token found".to_string()))?;
+            .ok_or_else(|| CalblendError::Authentication("No token found".to_string()))?;
 
         // Check if token is expired
         if token_data.is_expired() {
@@ -144,20 +144,25 @@ impl GoogleAuth {
         }
     }
 
+    /// Get valid token (alias for get_access_token for webhook compatibility)
+    pub async fn get_valid_token(&self) -> Result<String> {
+        self.get_access_token().await
+    }
+
     /// Refresh an expired token
     #[instrument(skip(self, token_data))]
     async fn refresh_token(&self, token_data: TokenData) -> Result<String> {
         let refresh_token = token_data
             .refresh_token
             .clone()
-            .ok_or_else(|| CalblendError::AuthenticationError("No refresh token".to_string()))?;
+            .ok_or_else(|| CalblendError::Authentication("No refresh token".to_string()))?;
 
         let token_result = self
             .oauth_client
             .exchange_refresh_token(&RefreshToken::new(refresh_token))
             .request_async(async_http_client)
             .await
-            .map_err(|e| CalblendError::AuthenticationError(e.to_string()))?;
+            .map_err(|e| CalblendError::Authentication(e.to_string()))?;
 
         // Update token data
         let new_token_data = TokenData {
@@ -189,7 +194,7 @@ impl GoogleAuth {
             .token_storage
             .get_token(CalendarSource::Google)
             .await?
-            .ok_or_else(|| CalblendError::AuthenticationError("No token found".to_string()))?;
+            .ok_or_else(|| CalblendError::Authentication("No token found".to_string()))?;
 
         // Revoke the token with Google
         let revoke_url = format!("{}?token={}", Self::REVOKE_URL, token_data.access_token);
@@ -200,7 +205,7 @@ impl GoogleAuth {
             .map_err(|e| CalblendError::InternalError(e.to_string()))?;
 
         if !response.status().is_success() {
-            return Err(CalblendError::AuthenticationError(
+            return Err(CalblendError::Authentication(
                 "Failed to revoke token".to_string(),
             ));
         }

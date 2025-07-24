@@ -7,7 +7,7 @@ pub type Result<T> = std::result::Result<T, CalblendError>;
 #[derive(Error, Debug)]
 pub enum CalblendError {
     #[error("Authentication failed: {0}")]
-    AuthenticationError(String),
+    Authentication(String),
     
     #[error("Permission denied: {0}")]
     PermissionDenied(String),
@@ -18,11 +18,8 @@ pub enum CalblendError {
     #[error("Invalid data: {0}")]
     InvalidData(String),
     
-    #[error("Provider error: {provider} - {message}")]
-    ProviderError {
-        provider: String,
-        message: String,
-    },
+    #[error("Provider error: {0}")]
+    Provider(String),
     
     #[error("Rate limit exceeded")]
     RateLimitExceeded,
@@ -44,6 +41,15 @@ pub enum CalblendError {
     
     #[error("Internal error: {0}")]
     InternalError(String),
+    
+    #[error("Configuration error: {0}")]
+    Configuration(String),
+    
+    #[error("HTTP error: {0}")]
+    Http(String),
+    
+    #[error("Deserialization error: {0}")]
+    Deserialization(String),
 }
 
 impl CalblendError {
@@ -58,11 +64,11 @@ impl CalblendError {
     /// Get the error code for FFI boundary
     pub fn error_code(&self) -> i32 {
         match self {
-            CalblendError::AuthenticationError(_) => 1001,
+            CalblendError::Authentication(_) => 1001,
             CalblendError::PermissionDenied(_) => 1002,
             CalblendError::NetworkError(_) => 2001,
             CalblendError::InvalidData(_) => 3001,
-            CalblendError::ProviderError { .. } => 4001,
+            CalblendError::Provider(_) => 4001,
             CalblendError::RateLimitExceeded => 4002,
             CalblendError::CalendarNotFound(_) => 5001,
             CalblendError::EventNotFound(_) => 5002,
@@ -70,6 +76,9 @@ impl CalblendError {
             CalblendError::TokenStorageError(_) => 7001,
             CalblendError::UnsupportedOperation(_) => 8001,
             CalblendError::InternalError(_) => 9001,
+            CalblendError::Configuration(_) => 10001,
+            CalblendError::Http(_) => 10002,
+            CalblendError::Deserialization(_) => 10003,
         }
     }
 }

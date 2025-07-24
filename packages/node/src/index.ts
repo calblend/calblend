@@ -72,3 +72,6 @@ export type {
   ConferenceLink,
   Calendar,
 } from '../index';
+
+// Export providers
+export * from './providers';

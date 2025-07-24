@@ -9,6 +9,7 @@ pub mod error;
 pub mod auth;
 pub mod sync;
 pub mod http;
+pub mod cache;
 
 pub use models::*;
 pub use error::{CalblendError, Result};
@@ -108,5 +109,19 @@ impl Default for CalblendConfig {
             timeout_secs: 30,
             max_retries: 3,
         }
+    }
+}
+
+impl CalblendConfig {
+    /// Set timeout in seconds
+    pub fn with_timeout_seconds(mut self, timeout: u64) -> Self {
+        self.timeout_secs = timeout;
+        self
+    }
+
+    /// Set max retries
+    pub fn with_max_retries(mut self, retries: u32) -> Self {
+        self.max_retries = retries;
+        self
     }
 }

@@ -18,6 +18,8 @@ anyhow = { workspace = true }
 reqwest = { workspace = true }
 reqwest-middleware = { workspace = true }
 reqwest-retry = { workspace = true }
+http = { workspace = true }
+urlencoding = { workspace = true }
 tracing = { workspace = true }
 
 # OAuth
