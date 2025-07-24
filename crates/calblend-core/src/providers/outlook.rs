@@ -1,3 +1,4 @@
+/* NOT IMPLEMENTED YET!!!!
 //! Microsoft Outlook/Graph provider implementation
 
 use async_trait::async_trait;
@@ -71,3 +72,4 @@ impl CalendarProvider for OutlookCalendarProvider {
         Ok(vec![])
     }
 }
+    */

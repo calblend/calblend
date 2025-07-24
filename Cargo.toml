@@ -27,11 +27,22 @@ thiserror = "2.0"
 anyhow = "1.0"
 
 # HTTP client
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+reqwest-middleware = "0.2"
+reqwest-retry = "0.3"
 
 # Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# OAuth
+oauth2 = "4.4"
+base64 = "0.22"
+url = "2.5"
+
+# Crypto for PKCE
+sha2 = "0.10"
+rand = "0.8"
 
 # Testing
 mockito = "1.6"

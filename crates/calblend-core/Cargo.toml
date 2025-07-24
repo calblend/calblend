@@ -16,20 +16,22 @@ chrono-tz = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
 reqwest = { workspace = true }
+reqwest-middleware = { workspace = true }
+reqwest-retry = { workspace = true }
 tracing = { workspace = true }
 
 # OAuth
-oauth2 = "4.4"
-base64 = "0.22"
+oauth2 = { workspace = true }
+base64 = { workspace = true }
+url = { workspace = true }
+sha2 = { workspace = true }
+rand = { workspace = true }
 
 # Async trait
 async-trait = "0.1"
 
 # UUID generation
 uuid = { version = "1.11", features = ["v4", "serde"] }
-
-# URL parsing
-url = "2.5"
 
 [dev-dependencies]
 tokio-test = "0.4"

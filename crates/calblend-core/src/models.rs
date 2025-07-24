@@ -94,7 +94,7 @@ pub struct EventMoment {
     pub all_day: Option<bool>,
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub enum CalendarSource {
     Google,

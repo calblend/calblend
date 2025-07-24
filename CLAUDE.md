@@ -3,6 +3,11 @@
 ## Overview
 Calblend is a cross-platform calendar integration library providing a unified API for Google Calendar, Outlook, and native calendars. Core engine in Rust, exposed to Node.js via napi-rs FFI bindings, with TypeScript SDK wrapper.
 
+## Key Documents
+- **Project Specification**: `docs/PROJECT_SPEC.md` - Full feature requirements
+- **Implementation Roadmap**: `docs/IMPLEMENTATION_ROADMAP.md` - Phasing and gaps
+- **Unified Calendar Design**: `docs/unified-calendar-design.md` - Data model details
+
 ## Architecture Invariants
 - **NO MICROSERVICES**: Compiles to native Node.js addon (.node file)
 - **ZERO RUNTIME DEPS**: No external services, databases, or daemons

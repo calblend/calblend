@@ -8,6 +8,7 @@ pub mod providers;
 pub mod error;
 pub mod auth;
 pub mod sync;
+pub mod http;
 
 pub use models::*;
 pub use error::{CalblendError, Result};

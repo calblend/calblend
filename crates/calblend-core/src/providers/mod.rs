@@ -9,3 +9,6 @@ pub mod ios;
 
 #[cfg(target_os = "android")]
 pub mod android;
+
+// Re-export providers
+pub use google::GoogleCalendarProvider;
