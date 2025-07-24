@@ -1,0 +1,44 @@
+[workspace]
+members = ["crates/calblend-core", "crates/calblend-ffi"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Your Name <your.email@example.com>"]
+edition = "2021"
+license = "Elastic-2.0"
+repository = "https://github.com/calblend/calblend"
+rust-version = "1.88"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.41", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Date/time handling
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# HTTP client
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Testing
+mockito = "1.6"
+wiremock = "0.6"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true

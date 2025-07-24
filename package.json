@@ -1,0 +1,35 @@
+{
+  "name": "calblend-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Calblend monorepo root",
+  "license": "Elastic-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calblend/calblend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/calblend/calblend/issues"
+  },
+  "homepage": "https://github.com/calblend/calblend#readme",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:rust && npm run build -w @calblend/calendar",
+    "build:rust": "cargo build --release",
+    "build:debug": "cargo build && npm run build:debug -w @calblend/calendar",
+    "test": "cargo test --workspace && npm test -w @calblend/calendar",
+    "lint": "cargo clippy --workspace -- -D warnings && npm run lint -w @calblend/calendar",
+    "format": "cargo fmt && npm run format -w @calblend/calendar",
+    "clean": "cargo clean && rm -rf packages/node/dist packages/node/*.node",
+    "example:basic": "cd examples/basic && npm start"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  }
+}

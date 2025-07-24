@@ -1,0 +1,76 @@
+{
+  "name": "@calblend/calendar",
+  "version": "0.1.0",
+  "description": "Unified calendar integration library for Node.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts",
+    "calblend.*.node"
+  ],
+  "scripts": {
+    "build": "npm run build:napi && npm run build:ts",
+    "build:napi": "napi build --platform --release --dts index.d.ts ../../crates/calblend-ffi",
+    "build:debug": "napi build --platform ../../crates/calblend-ffi",
+    "build:ts": "tsc",
+    "build:release": "npm run build:napi && npm run build:ts && npm run package",
+    "package": "napi prepublish -t npm",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "generate-types": "napi build --dts index.d.ts ../../crates/calblend-ffi"
+  },
+  "keywords": [
+    "calendar",
+    "google-calendar",
+    "outlook",
+    "ical",
+    "events",
+    "scheduling"
+  ],
+  "author": "Calblend Team",
+  "license": "Elastic-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calblend/calblend.git",
+    "directory": "packages/node"
+  },
+  "bugs": {
+    "url": "https://github.com/calblend/calblend/issues"
+  },
+  "homepage": "https://github.com/calblend/calblend#readme",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.8.2"
+  },
+  "napi": {
+    "name": "calblend",
+    "triples": {
+      "defaults": true,
+      "additional": [
+        "x86_64-pc-windows-msvc",
+        "aarch64-pc-windows-msvc",
+        "x86_64-apple-darwin",
+        "aarch64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl"
+      ]
+    }
+  }
+}

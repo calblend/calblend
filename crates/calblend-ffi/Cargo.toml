@@ -1,0 +1,30 @@
+[package]
+name = "calblend-ffi"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Core functionality
+calblend-core = { path = "../calblend-core" }
+
+# N-API bindings
+napi = { version = "2", features = ["async", "tokio_rt", "napi8", "serde-json"] }
+napi-derive = "2"
+
+# Re-export core dependencies needed for FFI
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
