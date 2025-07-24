@@ -1,44 +1,35 @@
 //! FFI client implementation
 
 use napi::bindgen_prelude::*;
-use napi::{JsObject};
+use napi::JsObject;
 use napi_derive::napi;
 use std::sync::Arc;
-use tokio::sync::Mutex;
 
 use crate::models::*;
-
-/// Token storage wrapper for JavaScript objects
-pub struct JsTokenStorage {
-    inner: JsObject,
-}
-
-impl JsTokenStorage {
-    pub fn new(storage: JsObject) -> Self {
-        Self { inner: storage }
-    }
-}
+use crate::token_storage::JsTokenStorage;
 
 /// Main calendar client exposed to JavaScript
 #[napi]
 pub struct CalendarClient {
     // We'll implement the actual client logic later
     // For now, just the structure
-    token_storage: Arc<Mutex<JsTokenStorage>>,
+    #[allow(dead_code)]
+    token_storage: Arc<JsTokenStorage>,
 }
 
 #[napi]
 impl CalendarClient {
     #[napi(constructor)]
-    pub fn new(token_storage: JsObject) -> Result<Self> {
+    pub fn new(_token_storage: JsObject) -> Result<Self> {
+        // For now, use the in-memory storage until we implement JS bridge
         Ok(Self {
-            token_storage: Arc::new(Mutex::new(JsTokenStorage::new(token_storage))),
+            token_storage: Arc::new(JsTokenStorage::new()),
         })
     }
 
     /// List all calendars accessible by the user
     #[napi]
-    pub async fn list_calendars(&self, provider: CalendarSource) -> Result<Vec<Calendar>> {
+    pub async fn list_calendars(&self, _provider: CalendarSource) -> Result<Vec<Calendar>> {
         // TODO: Implement actual calendar listing
         Ok(vec![])
     }
@@ -47,10 +38,10 @@ impl CalendarClient {
     #[napi]
     pub async fn list_events(
         &self,
-        provider: CalendarSource,
-        calendar_id: String,
-        start_date: Option<String>,
-        end_date: Option<String>,
+        _provider: CalendarSource,
+        _calendar_id: String,
+        _start_date: Option<String>,
+        _end_date: Option<String>,
     ) -> Result<Vec<UnifiedCalendarEvent>> {
         // TODO: Implement actual event listing
         Ok(vec![])
@@ -60,8 +51,8 @@ impl CalendarClient {
     #[napi]
     pub async fn create_event(
         &self,
-        provider: CalendarSource,
-        calendar_id: String,
+        _provider: CalendarSource,
+        _calendar_id: String,
         event: UnifiedCalendarEvent,
     ) -> Result<UnifiedCalendarEvent> {
         // TODO: Implement actual event creation
@@ -72,9 +63,9 @@ impl CalendarClient {
     #[napi]
     pub async fn update_event(
         &self,
-        provider: CalendarSource,
-        calendar_id: String,
-        event_id: String,
+        _provider: CalendarSource,
+        _calendar_id: String,
+        _event_id: String,
         event: UnifiedCalendarEvent,
     ) -> Result<UnifiedCalendarEvent> {
         // TODO: Implement actual event update
@@ -85,9 +76,9 @@ impl CalendarClient {
     #[napi]
     pub async fn delete_event(
         &self,
-        provider: CalendarSource,
-        calendar_id: String,
-        event_id: String,
+        _provider: CalendarSource,
+        _calendar_id: String,
+        _event_id: String,
     ) -> Result<()> {
         // TODO: Implement actual event deletion
         Ok(())

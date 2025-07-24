@@ -3,6 +3,7 @@
 use napi_derive::napi;
 use napi::{Error, Result, Status};
 use std::sync::Arc;
+use std::collections::HashMap;
 
 use calblend_core::{
     providers::google::{GoogleCalendarProvider as CoreGoogleProvider, WatchChannel, PushNotification},
@@ -27,14 +28,14 @@ impl GoogleCalendarProvider {
         client_id: String,
         client_secret: String,
         redirect_uri: String,
-        token_storage: &JsTokenStorage,
         webhook_endpoint: Option<String>,
     ) -> Result<Self> {
         let config = CalblendConfig::default()
             .with_timeout_seconds(30)
             .with_max_retries(3);
 
-        let token_storage: Arc<dyn TokenStorage> = Arc::new(token_storage.clone());
+        // Use in-memory storage for now
+        let token_storage: Arc<dyn TokenStorage> = Arc::new(JsTokenStorage::new());
 
         let mut provider = CoreGoogleProvider::new(
             client_id,
@@ -246,6 +247,36 @@ impl GoogleCalendarProvider {
 
         Ok(events.into_iter().map(Into::into).collect())
     }
+
+    /// Parse webhook headers from Google Calendar push notification
+    #[napi(js_name = "parseWebhookHeaders")]
+    pub fn parse_webhook_headers(headers: HashMap<String, String>) -> Result<GoogleWebhookNotification> {
+        let channel_id = headers.get("x-goog-channel-id")
+            .ok_or_else(|| Error::new(Status::InvalidArg, "Missing x-goog-channel-id header"))?
+            .clone();
+        
+        let resource_id = headers.get("x-goog-resource-id")
+            .ok_or_else(|| Error::new(Status::InvalidArg, "Missing x-goog-resource-id header"))?
+            .clone();
+        
+        let resource_state = headers.get("x-goog-resource-state")
+            .ok_or_else(|| Error::new(Status::InvalidArg, "Missing x-goog-resource-state header"))?
+            .clone();
+        
+        let resource_uri = headers.get("x-goog-resource-uri")
+            .ok_or_else(|| Error::new(Status::InvalidArg, "Missing x-goog-resource-uri header"))?
+            .clone();
+
+        Ok(GoogleWebhookNotification {
+            channel_id,
+            channel_token: headers.get("x-goog-channel-token").cloned(),
+            channel_expiration: headers.get("x-goog-channel-expiration").cloned(),
+            resource_id,
+            resource_state,
+            resource_uri,
+            message_number: headers.get("x-goog-message-number").cloned(),
+        })
+    }
 }
 
 /// Google Calendar watch channel for webhooks
@@ -269,4 +300,17 @@ impl From<WatchChannel> for GoogleWatchChannel {
             expiration: channel.expiration.to_rfc3339(),
         }
     }
+}
+
+/// Google webhook notification structure
+#[napi(object)]
+#[derive(Debug, Clone)]
+pub struct GoogleWebhookNotification {
+    pub channel_id: String,
+    pub channel_token: Option<String>,
+    pub channel_expiration: Option<String>,
+    pub resource_id: String,
+    pub resource_state: String,
+    pub resource_uri: String,
+    pub message_number: Option<String>,
 }
