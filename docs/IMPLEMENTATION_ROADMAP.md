@@ -10,6 +10,8 @@
    - Unified calendar data model
    - Pluggable token storage interface
    - Basic error handling structure
+   - HTTP client with retry logic
+   - Caching layer with TTL
 
 2. **Data Models**
    - UnifiedCalendarEvent with all required fields
@@ -17,13 +19,24 @@
    - Timezone handling (EventMoment)
    - Provider metadata preservation (raw field)
 
+3. **Google Calendar Provider (Completed)**
+   - OAuth 2.0 with PKCE implementation
+   - Full CRUD operations for calendar events
+   - Event listing with pagination
+   - Free/busy queries
+   - Webhook/push notification support
+   - Smart caching with invalidation
+   - Rate limiting (100 req/s)
+   - Exponential backoff retry logic
+   - FFI bindings and TypeScript SDK
+
 ### 🔴 Major Gaps to Address
 
 1. **Missing Core Features**
-   - [ ] OAuth 2.0 implementation for web providers
+   - [x] OAuth 2.0 implementation for web providers (Google done)
    - [ ] Native platform integrations (iOS/Android)
-   - [ ] Real-time sync (webhooks/push notifications)
-   - [ ] Free/busy aggregation
+   - [x] Real-time sync (webhooks/push notifications) (Google done)
+   - [x] Free/busy aggregation (Google done)
    - [ ] Event search functionality
    - [ ] Recurring event handling
    - [ ] Multi-calendar aggregation
@@ -32,17 +45,22 @@
    - [ ] Offline queue
 
 2. **Provider Implementations**
-   - [ ] Google Calendar API integration
+   - [x] Google Calendar API integration
    - [ ] Microsoft Graph API integration
    - [ ] iOS EventKit bridge
    - [ ] Android Calendar Provider bridge
 
-3. **Performance & Reliability**
-   - [ ] Rate limiting per provider
+3. **Build Infrastructure**
+   - [ ] Native addon build configuration (build.rs)
+   - [ ] Cross-platform compilation scripts
+   - [ ] CI/CD pipeline for binary distribution
+
+4. **Performance & Reliability**
+   - [x] Rate limiting per provider (Google done)
    - [ ] Intelligent request batching
-   - [ ] Caching layer with TTL
-   - [ ] Retry logic with exponential backoff
-   - [ ] Connection pooling
+   - [x] Caching layer with TTL
+   - [x] Retry logic with exponential backoff
+   - [x] Connection pooling
 
 ## Implementation Phases
 

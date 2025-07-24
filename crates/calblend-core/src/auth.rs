@@ -75,6 +75,14 @@ pub mod test_utils {
         tokens: Arc<Mutex<HashMap<String, TokenData>>>,
     }
     
+    impl InMemoryTokenStorage {
+        pub fn new() -> Self {
+            Self {
+                tokens: Arc::new(Mutex::new(HashMap::new())),
+            }
+        }
+    }
+    
     #[async_trait]
     impl TokenStorage for InMemoryTokenStorage {
         async fn get_token(&self, provider: CalendarSource) -> Result<Option<TokenData>> {

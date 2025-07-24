@@ -36,6 +36,7 @@ struct WatchRequest {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct WatchResponse {
+    #[allow(dead_code)]
     kind: String,
     id: String,
     resource_id: String,

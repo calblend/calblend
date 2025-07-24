@@ -16,11 +16,17 @@
     "build:debug": "napi build --platform ../../crates/calblend-ffi",
     "build:ts": "tsc",
     "build:release": "npm run build:napi && npm run build:ts && npm run package",
+    "build:cross": "napi build --platform --release --cross-compile ../../crates/calblend-ffi",
     "package": "napi prepublish -t npm",
+    "artifacts": "napi artifacts",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "generate-types": "napi build --dts index.d.ts ../../crates/calblend-ffi"
+    "generate-types": "napi build --dts index.d.ts ../../crates/calblend-ffi",
+    "clean": "rm -rf dist *.node",
+    "prepublishOnly": "npm run build:release"
   },
   "keywords": [
     "calendar",
